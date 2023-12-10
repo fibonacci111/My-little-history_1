@@ -3,24 +3,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+//public interface GravityController
+//{
+//    public abstract void Gravity();
+//}
+
+public class PlayerController :  MonoBehaviour
 {
     [SerializeField] CharacterController cc;
-    [SerializeField] public float Speed = 10f;
-    [SerializeField] public float RotateSpeed = 5f;
+    [SerializeField] float Speed = 10f;
+    [SerializeField] float RotateSpeed = 5f;
     private Vector3 moveDirection;
-
+    [SerializeField] GameObject PlayerBody;
     public static PlayerController Player_Singltone;
-  
-    [SerializeField] GroundChecker ground;
-    
+  private bool switchd = true;
+
     public float gravity = -9.81f;
-  
-  public float JumpHeight = 10f;
-  Vector3 velosity;
+    public float staticGravity = -9.81f;
+
+    [NonSerialized] public bool umbrellaIsOpen;
+
+    public float JumpHeight = 10f;
+    Vector3 velosity; 
+    
+    [SerializeField] GroundChecker ground;
+    [SerializeField] Umbrella umbrella;
+
     private void Start()
     {
         Time.timeScale = 1;
+        Player_Singltone= this;
     }
 
     void Update()
@@ -28,12 +40,28 @@ public class PlayerController : MonoBehaviour
         ground._IsGround();
         Controller();
         Gravity();
+
+
        
         if (Input.GetButtonDown("Jump") && ground._IsGround())
         {
             Jump();   
         }
-        
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (!switchd)
+            {
+                
+                umbrella.OpenUmbrella();
+                switchd = true;
+                umbrellaIsOpen = true;
+            }else if (switchd)
+            {
+                umbrella.CloseUmbrella();
+                switchd = false;
+                umbrellaIsOpen=false;
+            }
+        }
 
     }
 
@@ -43,12 +71,20 @@ public class PlayerController : MonoBehaviour
         float horizontal = Input.GetAxisRaw("Horizontal");
 
         moveDirection = (vertical * transform.forward + horizontal * transform.right).normalized;
+        Vector3 rotatetion = new Vector3(horizontal, 0, vertical);
+        rotatetion.Normalize();
+        if (rotatetion != Vector3.zero)
+        {
+            ////Quaternion rotation = Quaternion.LookRotation(moveDirection);
 
-      
+            ////transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * Speed);
+            PlayerBody.transform.forward = rotatetion*RotateSpeed*Time.deltaTime;
+        }
 
-        cc.Move(moveDirection * Speed * Time.deltaTime);
+
+        cc.Move(moveDirection * Speed * Time.fixedDeltaTime);
     }
-   public void Gravity()
+   public  void Gravity()
     {
        
         if (ground._IsGround() && velosity.y < 0)
@@ -63,12 +99,10 @@ public class PlayerController : MonoBehaviour
         if (ground._IsGround())
         {
             velosity.y = Mathf.Sqrt(JumpHeight * -2f * gravity);
-            Debug.Log("Jump");
+            
         }
     }
 }
-
-
 
 
 
@@ -80,4 +114,26 @@ public class GroundChecker
     public LayerMask Ground;
     [NonSerialized] public static bool isGround;
     public bool _IsGround()=> isGround = Physics.CheckSphere(GroundCheck.position, GroundDistanse, Ground);
+}
+
+[Serializable]
+public class Umbrella
+{
+    [SerializeField] GameObject umbrella;
+    [SerializeField] float newGravity;
+   
+
+   public void OpenUmbrella()
+    {
+        umbrella.SetActive(true);
+       
+
+    }
+    public void CloseUmbrella()
+    {
+        umbrella.SetActive(true);
+        
+    }
+
+   
 }
