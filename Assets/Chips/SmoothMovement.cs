@@ -9,6 +9,7 @@ public class SmoothMovement : MonoBehaviour
     [SerializeField] Transform targetPosition;
     [SerializeField] float LifeTime;
     private float time = 0;
+    [SerializeField] bool isKiller;
 
     private void FixedUpdate()
     {
@@ -28,7 +29,7 @@ public class SmoothMovement : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player")&&isKiller)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
