@@ -12,10 +12,10 @@ public class Wind : MonoBehaviour
 
     void Update()
     {
-        if(enter)
+        if(enter && PlayerController.Player_Singltone.umbrellaIsOpen)
         {
             PlayerController.Player_Singltone.gravity= newGravity;
-        }else if(!enter) {
+        }else if(!enter&& PlayerController.Player_Singltone.umbrellaIsOpen) {
             PlayerController.Player_Singltone.gravity = PlayerController.Player_Singltone.staticGravity;
         }
     }
