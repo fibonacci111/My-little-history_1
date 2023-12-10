@@ -8,6 +8,7 @@ public class SmoothMovement : MonoBehaviour
     [SerializeField] Transform targetPosition;
     [SerializeField] float LifeTime;
     private float time = 0;
+
     private void FixedUpdate()
     {
         if (time <= LifeTime) {
@@ -25,4 +26,5 @@ public class SmoothMovement : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, targetPosition.position, step);
     }
     
+
 }
