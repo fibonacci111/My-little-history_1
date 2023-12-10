@@ -12,7 +12,7 @@ public class SmoothMovement : MonoBehaviour
     private void FixedUpdate()
     {
         if (time <= LifeTime) {
-            time += 1f;
+            time += 1f * Time.deltaTime;
         }
         else
         {
