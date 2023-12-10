@@ -16,7 +16,7 @@ public class PlayerController :  MonoBehaviour
     private Vector3 moveDirection;
     [SerializeField] GameObject PlayerBody;
     public static PlayerController Player_Singltone;
-  private bool switchd = true;
+    private bool switchd;
 
     public float gravity = -9.81f;
     public float staticGravity = -9.81f;
@@ -35,11 +35,13 @@ public class PlayerController :  MonoBehaviour
         Player_Singltone= this;
     }
 
+    
     void Update()
     {
         ground._IsGround();
-        Controller();
+     
         Gravity();
+        Controller();
 
 
        
@@ -120,7 +122,7 @@ public class GroundChecker
 public class Umbrella
 {
     [SerializeField] GameObject umbrella;
-    [SerializeField] float newGravity;
+    
    
 
    public void OpenUmbrella()
