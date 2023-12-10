@@ -10,7 +10,7 @@ public class Wind : MonoBehaviour
    
 
 
-    void Update()
+    void FixedUpdate()
     {
         if(enter && PlayerController.Player_Singltone.umbrellaIsOpen)
         {
