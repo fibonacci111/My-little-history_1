@@ -470,7 +470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48d11e0ee5896d940ac86882e40d8f1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newGravity: 2
+  newGravity: 10
 --- !u!65 &215285002
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -486,7 +486,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -2754,8 +2754,8 @@ MonoBehaviour:
   Speed: 10
   RotateSpeed: 10
   PlayerBody: {fileID: 1119833578}
-  gravity: -9.81
-  staticGravity: -9.81
+  gravity: -39.24
+  staticGravity: -39.24
   JumpHeight: 5
   ground:
     GroundCheck: {fileID: 935977400}
@@ -2765,7 +2765,6 @@ MonoBehaviour:
       m_Bits: 16
   umbrella:
     umbrella: {fileID: 1969714977}
-    newGravity: 1
 --- !u!1 &935977399
 GameObject:
   m_ObjectHideFlags: 0

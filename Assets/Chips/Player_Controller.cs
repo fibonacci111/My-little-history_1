@@ -128,7 +128,6 @@ public class Umbrella
    public void OpenUmbrella()
     {
         umbrella.SetActive(true);
-       
 
     }
     public void CloseUmbrella()
