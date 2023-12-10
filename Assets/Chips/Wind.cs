@@ -15,8 +15,10 @@ public class Wind : MonoBehaviour
         if(enter && PlayerController.Player_Singltone.umbrellaIsOpen)
         {
             PlayerController.Player_Singltone.gravity= newGravity;
+            PlayerController.Player_Singltone.umbrellaOnWind= true;
         }else if(!enter&& PlayerController.Player_Singltone.umbrellaIsOpen) {
             PlayerController.Player_Singltone.gravity = PlayerController.Player_Singltone.staticGravity;
+            PlayerController.Player_Singltone.umbrellaOnWind = false;
         }
     }
     private void OnTriggerEnter(Collider other)

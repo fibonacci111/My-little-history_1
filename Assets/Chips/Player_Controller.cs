@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 //public interface GravityController
@@ -20,8 +21,10 @@ public class PlayerController :  MonoBehaviour
 
     public float gravity = -9.81f;
     public float staticGravity = -9.81f;
+    public float umbrellaGravity = -0.5f;
 
     [NonSerialized] public bool umbrellaIsOpen;
+    [NonSerialized] public bool umbrellaOnWind;
 
     public float JumpHeight = 10f;
     Vector3 velosity; 
@@ -39,7 +42,7 @@ public class PlayerController :  MonoBehaviour
     void Update()
     {
         ground._IsGround();
-     
+
         Gravity();
         Controller();
 
@@ -89,11 +92,25 @@ public class PlayerController :  MonoBehaviour
    public  void Gravity()
     {
        
-        if (ground._IsGround() && velosity.y < 0)
+        if (ground._IsGround() && velosity.y < 0 &&!umbrellaIsOpen)
         {
             velosity.y = -2f;
         }
-        velosity.y += gravity * Time.deltaTime;
+       
+        if(umbrellaIsOpen && !ground._IsGround() && !umbrellaOnWind)
+        {
+            velosity.y += umbrellaGravity * Time.deltaTime;
+        }
+        
+        if (umbrellaOnWind&& umbrellaIsOpen)
+        {
+            velosity.y += gravity * Time.deltaTime;
+        }
+
+        if (!umbrellaIsOpen)
+        {
+            velosity.y += gravity * Time.deltaTime;
+        }
         cc.Move(velosity * Time.deltaTime);
     }
     public void Jump()
@@ -104,6 +121,7 @@ public class PlayerController :  MonoBehaviour
             
         }
     }
+    
 }
 
 
@@ -132,9 +150,10 @@ public class Umbrella
     }
     public void CloseUmbrella()
     {
-        umbrella.SetActive(true);
+        umbrella.SetActive(false);
         
     }
 
    
 }
+
