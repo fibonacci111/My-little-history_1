@@ -57,7 +57,14 @@ public class PlayerController :  MonoBehaviour
 
         Gravity();
         Controller();
-
+        if (umbrellaIsOpen)
+        {
+            JumpHeight = umbrella.UmbrellaJumpHeight;
+        }
+        else
+        {
+            JumpHeight = (float)oldJumpHeight;
+        }
         if (Input.GetButtonDown("Jump") && ground._IsGround())
         {
             Jump();   
@@ -110,7 +117,7 @@ public class PlayerController :  MonoBehaviour
         if(umbrellaIsOpen && !ground._IsGround() && !umbrellaOnWind)
         {
             velosity.y += umbrellaGravity * Time.deltaTime;
-            JumpHeight = umbrella.UmbrellaJumpHeight;
+           
         }
         
         if (umbrellaOnWind&& umbrellaIsOpen)
@@ -122,7 +129,7 @@ public class PlayerController :  MonoBehaviour
         if (!umbrellaIsOpen)
         {
             velosity.y += gravity * Time.deltaTime;
-            JumpHeight = (float)oldJumpHeight;
+            
         }
         cc.Move(velosity * Time.deltaTime);
     }
