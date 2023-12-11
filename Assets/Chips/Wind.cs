@@ -21,6 +21,11 @@ public class Wind : MonoBehaviour
             PlayerController.Player_Singltone.gravity = (float)PlayerController.Player_Singltone.staticGravity;
             PlayerController.Player_Singltone.umbrellaOnWind = false;
         }
+        if (!PlayerController.Player_Singltone.umbrellaIsOpen)
+        {
+            PlayerController.Player_Singltone.gravity = (float)PlayerController.Player_Singltone.staticGravity;
+            PlayerController.Player_Singltone.umbrellaOnWind = false;
+        }
     }
     private void OnTriggerEnter(Collider other)
     {
