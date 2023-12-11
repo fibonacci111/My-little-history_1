@@ -14,6 +14,7 @@ public class PlayerController :  MonoBehaviour
 {
     [SerializeField] CharacterController cc;
     [SerializeField] float Speed = 10f;
+    [SerializeField] float LadderSpeed = 5f;
     [SerializeField] float RotateSpeed = 5f;
     public float JumpHeight = 10f;
     [NonSerialized] public float? oldJumpHeight = null;
@@ -115,8 +116,9 @@ public class PlayerController :  MonoBehaviour
             cc.Move(moveDirection * Speed * Time.fixedDeltaTime);
             
         }else if (LadderEnter)
-        {cc.Move(horMove *  Speed * Time.fixedDeltaTime);
-            cc.Move(ladder * Speed * Time.fixedDeltaTime); 
+        {
+            cc.Move(horMove *  Speed * Time.fixedDeltaTime);
+            cc.Move(ladder * LadderSpeed * Time.fixedDeltaTime); 
         }
     }
    public  void Gravity()

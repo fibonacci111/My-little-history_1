@@ -6,6 +6,7 @@ public class Spawner : MonoBehaviour
 {
     [SerializeField] GameObject SpawnObject;
     private bool enter;
+    private bool enter2;
     void Start()
     {
         
@@ -17,13 +18,15 @@ public class Spawner : MonoBehaviour
         if(enter)
         {
             SpawnObject.SetActive(true);
+            enter = false;
         }
         
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")) { 
+        if (other.CompareTag("Player")&&!enter2) { 
         enter = true;
+            enter2= true;
         }
     }
 }

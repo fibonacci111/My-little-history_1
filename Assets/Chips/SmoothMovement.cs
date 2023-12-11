@@ -11,9 +11,11 @@ public class SmoothMovement : MonoBehaviour
     private float time = 0;
     [SerializeField] bool isKiller;
 
+    public bool isPlayer;
     private void FixedUpdate()
     {
-        if (gameObject.active == true)
+
+        if (gameObject.active == true&&!isPlayer)
         {
             if (time <= LifeTime)
             {
@@ -22,7 +24,7 @@ public class SmoothMovement : MonoBehaviour
             else
             {
                 gameObject.SetActive(false);
-                time = 0;
+                
             }
         }
     }
@@ -33,9 +35,12 @@ public class SmoothMovement : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")&&isKiller)
+        if (other.CompareTag("Player") && isKiller)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            if (!isPlayer)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
         }
     }
 
