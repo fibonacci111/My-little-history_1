@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 //public interface GravityController
 //{
@@ -28,7 +29,8 @@ public class PlayerController :  MonoBehaviour
     [NonSerialized] public bool umbrellaIsOpen;
     [NonSerialized] public bool umbrellaOnWind;
 
-    
+    [SerializeField] float DeathHeight;
+
     Vector3 velosity; 
     
     [SerializeField] GroundChecker ground;
@@ -108,6 +110,16 @@ public class PlayerController :  MonoBehaviour
     }
    public  void Gravity()
     {
+        bool aa = false;
+        if (velosity.y <= DeathHeight && ground._IsGround())
+        {
+            aa = true;
+            
+        }
+        if (aa && ground._IsGround())
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
         
         if (ground._IsGround() && velosity.y < 0 &&!umbrellaIsOpen)
         {
@@ -120,6 +132,7 @@ public class PlayerController :  MonoBehaviour
             {
                 velosity.y = 0;
                 a = true;
+                aa = false;
             }            
             velosity.y += umbrellaGravity * Time.deltaTime;
            
