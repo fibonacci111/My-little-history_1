@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
     {
         staminaCanvas.fillAmount =1 - (timerStamina /stamina) ;
 
-        if (Input.GetKey(KeyCode.LeftShift) && timerStamina <= stamina && isRun)
+        if (Input.GetKey(KeyCode.LeftShift) && timerStamina <= stamina && isRun && ground._IsGround())
         {
             Speed = Sprint;
             timerStamina += 1f * Time.deltaTime;
