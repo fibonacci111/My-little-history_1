@@ -10,17 +10,23 @@ using UnityEngine.SceneManagement;
 //    public abstract void Gravity();
 //}
 
-public class PlayerController :  MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [SerializeField] CharacterController cc;
     [SerializeField] float Speed = 10f;
+    private float? oldSpeed = null;
+    [SerializeField] float Sprint = 15f;
+    public float stamina = 10f;
+    private float timerStamina = 0f;
+    [SerializeField] float TimeStart = 2f;
+    private bool isRun = true;
     [SerializeField] float LadderSpeed = 5f;
     [SerializeField] float RotateSpeed = 5f;
     public float JumpHeight = 10f;
     [NonSerialized] public float? oldJumpHeight = null;
     private Vector3 moveDirection;
     [SerializeField] GameObject PlayerBody;
-    
+
     private bool switchd;
     private bool a = false;
     public float gravity = -9.81f;
@@ -33,30 +39,57 @@ public class PlayerController :  MonoBehaviour
 
     [SerializeField] float DeathHeight;
 
-    Vector3 velosity; 
-    
+    Vector3 velosity;
+
     [SerializeField] GroundChecker ground;
     [SerializeField] Umbrella umbrella;
     public static PlayerController Player_Singltone;
 
     private void Awake()
     {
-         Player_Singltone= this;
+        Player_Singltone = this;
+
     }
     private void Start()
     {
-        if (staticGravity == null && oldJumpHeight == null)
+        if (staticGravity == null && oldJumpHeight == null && oldSpeed == null)
         {
             staticGravity = gravity;
             oldJumpHeight = JumpHeight;
+            oldSpeed = Speed;
+
         }
         Time.timeScale = 1;
-       
+
     }
 
-    
+
     void Update()
     {
+
+        if (Input.GetKey(KeyCode.LeftShift) && timerStamina <= stamina && isRun)
+        {
+            Speed = Sprint;
+            timerStamina += 1f * Time.deltaTime;
+            isRun = true;
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift) || timerStamina >= stamina)
+        {
+            isRun = false;
+        }
+        if(!isRun)
+        {
+            Speed = (float)oldSpeed;
+            if (timerStamina >= 0)
+            {
+                timerStamina-=1f * Time.deltaTime;
+            }
+            else if(timerStamina <TimeStart)
+            {
+                isRun = true;
+            }
+
+        }
         ground._IsGround();
         if (!LadderEnter)
         {
