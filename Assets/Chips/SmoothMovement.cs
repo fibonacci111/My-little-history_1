@@ -13,13 +13,17 @@ public class SmoothMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (time <= LifeTime) {
-            time += 1f * Time.deltaTime;
-        }
-        else
+        if (gameObject.active == true)
         {
-            gameObject.SetActive(false);
-            time = 0;
+            if (time <= LifeTime)
+            {
+                time += 1f * Time.deltaTime;
+            }
+            else
+            {
+                gameObject.SetActive(false);
+                time = 0;
+            }
         }
     }
     void Update()
