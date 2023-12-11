@@ -1,39 +1,82 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+//public interface GravityController
+//{
+//    public abstract void Gravity();
+//}
+
+public class PlayerController :  MonoBehaviour
 {
     [SerializeField] CharacterController cc;
-    [SerializeField] public float Speed = 10f;
-    [SerializeField] public float RotateSpeed = 5f;
+    [SerializeField] float Speed = 10f;
+    [SerializeField] float RotateSpeed = 5f;
+    public float JumpHeight = 10f;
+    [NonSerialized] public float? oldJumpHeight = null;
     private Vector3 moveDirection;
-
-    public static PlayerController Player_Singltone;
-  
-    [SerializeField] GroundChecker ground;
+    [SerializeField] GameObject PlayerBody;
     
+    private bool switchd;
+
     public float gravity = -9.81f;
-  
-  public float JumpHeight = 10f;
-  Vector3 velosity;
+    [NonSerialized] public float? staticGravity = null;
+    public float umbrellaGravity = -0.5f;
+
+    [NonSerialized] public bool umbrellaIsOpen;
+    [NonSerialized] public bool umbrellaOnWind;
+
+    
+    Vector3 velosity; 
+    
+    [SerializeField] GroundChecker ground;
+    [SerializeField] Umbrella umbrella;
+    public static PlayerController Player_Singltone;
+
+    private void Awake()
+    {
+         Player_Singltone= this;
+    }
     private void Start()
     {
+        if (staticGravity == null && oldJumpHeight == null)
+        {
+            staticGravity = gravity;
+            oldJumpHeight = JumpHeight;
+        }
         Time.timeScale = 1;
+       
     }
 
+    
     void Update()
     {
         ground._IsGround();
-        Controller();
+
         Gravity();
-       
+        Controller();
+
         if (Input.GetButtonDown("Jump") && ground._IsGround())
         {
             Jump();   
         }
-        
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (!switchd)
+            {
+                
+                umbrella.OpenUmbrella();
+                switchd = true;
+                umbrellaIsOpen = true;
+            }else if (switchd)
+            {
+                umbrella.CloseUmbrella();
+                switchd = false;
+                umbrellaIsOpen=false;
+            }
+        }
 
     }
 
@@ -43,19 +86,44 @@ public class PlayerController : MonoBehaviour
         float horizontal = Input.GetAxisRaw("Horizontal");
 
         moveDirection = (vertical * transform.forward + horizontal * transform.right).normalized;
+        Vector3 rotatetion = new Vector3(horizontal, 0, vertical);
+        rotatetion.Normalize();
+        if (rotatetion != Vector3.zero)
+        {
+            ////Quaternion rotation = Quaternion.LookRotation(moveDirection);
 
-      
+            ////transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * Speed);
+            PlayerBody.transform.forward = rotatetion*RotateSpeed*Time.deltaTime;
+        }
 
-        cc.Move(moveDirection * Speed * Time.deltaTime);
+
+        cc.Move(moveDirection * Speed * Time.fixedDeltaTime);
     }
-   public void Gravity()
+   public  void Gravity()
     {
        
-        if (ground._IsGround() && velosity.y < 0)
+        if (ground._IsGround() && velosity.y < 0 &&!umbrellaIsOpen)
         {
             velosity.y = -2f;
         }
-        velosity.y += gravity * Time.deltaTime;
+       
+        if(umbrellaIsOpen && !ground._IsGround() && !umbrellaOnWind)
+        {
+            velosity.y += umbrellaGravity * Time.deltaTime;
+            JumpHeight = umbrella.UmbrellaJumpHeight;
+        }
+        
+        if (umbrellaOnWind&& umbrellaIsOpen)
+        {
+            velosity.y += gravity * Time.deltaTime;
+
+        }
+
+        if (!umbrellaIsOpen)
+        {
+            velosity.y += gravity * Time.deltaTime;
+            JumpHeight = (float)oldJumpHeight;
+        }
         cc.Move(velosity * Time.deltaTime);
     }
     public void Jump()
@@ -63,12 +131,11 @@ public class PlayerController : MonoBehaviour
         if (ground._IsGround())
         {
             velosity.y = Mathf.Sqrt(JumpHeight * -2f * gravity);
-            Debug.Log("Jump");
+            
         }
     }
+    
 }
-
-
 
 
 
@@ -81,3 +148,25 @@ public class GroundChecker
     [NonSerialized] public static bool isGround;
     public bool _IsGround()=> isGround = Physics.CheckSphere(GroundCheck.position, GroundDistanse, Ground);
 }
+
+[Serializable]
+public class Umbrella
+{
+    [SerializeField] GameObject umbrella;
+    public float UmbrellaJumpHeight;
+   
+
+   public void OpenUmbrella()
+    {
+        umbrella.SetActive(true);
+
+    }
+    public void CloseUmbrella()
+    {
+        umbrella.SetActive(false);
+        
+    }
+
+   
+}
+
