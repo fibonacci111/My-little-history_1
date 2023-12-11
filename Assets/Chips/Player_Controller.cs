@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 //public interface GravityController
 //{
@@ -17,6 +18,7 @@ public class PlayerController : MonoBehaviour
     private float? oldSpeed = null;
     [SerializeField] float Sprint = 15f;
     public float stamina = 10f;
+    [SerializeField] Image staminaCanvas;
     private float timerStamina = 0f;
     [SerializeField] float TimeStart = 2f;
     private bool isRun = true;
@@ -66,6 +68,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        staminaCanvas.fillAmount =1 - (timerStamina /stamina) ;
 
         if (Input.GetKey(KeyCode.LeftShift) && timerStamina <= stamina && isRun)
         {
