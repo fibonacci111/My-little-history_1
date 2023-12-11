@@ -3114,11 +3114,10 @@ MonoBehaviour:
   cc: {fileID: 926705167}
   Speed: 10
   RotateSpeed: 10
+  JumpHeight: 5
   PlayerBody: {fileID: 1119833578}
   gravity: -39.24
-  staticGravity: -39.24
   umbrellaGravity: -9
-  JumpHeight: 5
   ground:
     GroundCheck: {fileID: 935977400}
     GroundDistanse: 0.4
@@ -3127,6 +3126,7 @@ MonoBehaviour:
       m_Bits: 16
   umbrella:
     umbrella: {fileID: 1969714977}
+    UmbrellaJumpHeight: 2
 --- !u!1 &935977399
 GameObject:
   m_ObjectHideFlags: 0
