@@ -28,6 +28,7 @@ public class PlayerController :  MonoBehaviour
 
     [NonSerialized] public bool umbrellaIsOpen;
     [NonSerialized] public bool umbrellaOnWind;
+    public bool LadderEnter;
 
     [SerializeField] float DeathHeight;
 
@@ -56,8 +57,10 @@ public class PlayerController :  MonoBehaviour
     void Update()
     {
         ground._IsGround();
-
-        Gravity();
+        if (!LadderEnter)
+        {
+            Gravity();
+        }
         Controller();
         if (umbrellaIsOpen)
         {
@@ -96,25 +99,36 @@ public class PlayerController :  MonoBehaviour
 
         moveDirection = (vertical * transform.forward + horizontal * transform.right).normalized;
         Vector3 rotatetion = new Vector3(horizontal, 0, vertical);
+        Vector3 horMove = new Vector3(horizontal, 0, 0);
         rotatetion.Normalize();
+        Vector3 ladder = new Vector3(0, vertical, 0);
         if (rotatetion != Vector3.zero)
         {
             ////Quaternion rotation = Quaternion.LookRotation(moveDirection);
 
             ////transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * Speed);
-            PlayerBody.transform.forward = rotatetion*RotateSpeed*Time.deltaTime;
+            PlayerBody.transform.forward = rotatetion * RotateSpeed * Time.deltaTime;
         }
 
-
-        cc.Move(moveDirection * Speed * Time.fixedDeltaTime);
+        if (!LadderEnter)
+        {
+            cc.Move(moveDirection * Speed * Time.fixedDeltaTime);
+            
+        }else if (LadderEnter)
+        {cc.Move(horMove *  Speed * Time.fixedDeltaTime);
+            cc.Move(ladder * Speed * Time.fixedDeltaTime); 
+        }
     }
    public  void Gravity()
     {
         bool aa = false;
-        if (velosity.y <= DeathHeight && ground._IsGround())
+        if (velosity.y <= DeathHeight)
         {
             aa = true;
             
+        }else if (velosity.y >= DeathHeight)
+        {
+            aa = false;
         }
         if (aa && ground._IsGround())
         {
@@ -132,7 +146,7 @@ public class PlayerController :  MonoBehaviour
             {
                 velosity.y = 0;
                 a = true;
-                aa = false;
+                
             }            
             velosity.y += umbrellaGravity * Time.deltaTime;
            
