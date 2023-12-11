@@ -20,7 +20,7 @@ public class PlayerController :  MonoBehaviour
     [SerializeField] GameObject PlayerBody;
     
     private bool switchd;
-
+    private bool a = false;
     public float gravity = -9.81f;
     [NonSerialized] public float? staticGravity = null;
     public float umbrellaGravity = -0.5f;
@@ -84,7 +84,7 @@ public class PlayerController :  MonoBehaviour
                 umbrellaIsOpen=false;
             }
         }
-
+       
     }
 
     private void Controller()
@@ -108,7 +108,7 @@ public class PlayerController :  MonoBehaviour
     }
    public  void Gravity()
     {
-       
+        
         if (ground._IsGround() && velosity.y < 0 &&!umbrellaIsOpen)
         {
             velosity.y = -2f;
@@ -116,8 +116,18 @@ public class PlayerController :  MonoBehaviour
        
         if(umbrellaIsOpen && !ground._IsGround() && !umbrellaOnWind)
         {
+            if (!a)
+            {
+                velosity.y = 0;
+                a = true;
+            }            
             velosity.y += umbrellaGravity * Time.deltaTime;
            
+        }
+
+        if(ground._IsGround()||!umbrellaIsOpen)
+        {
+            a = false;
         }
         
         if (umbrellaOnWind&& umbrellaIsOpen)
