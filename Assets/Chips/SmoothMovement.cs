@@ -22,7 +22,7 @@ public class SmoothMovement : MonoBehaviour
             else
             {
                 gameObject.SetActive(false);
-                time = 0;
+                
             }
         }
     }
