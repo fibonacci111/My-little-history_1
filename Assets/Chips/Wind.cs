@@ -7,10 +7,6 @@ public class Wind : MonoBehaviour
     private bool enter;
     public float newGravity;
     
-    
-   
-
-
   public  void Update()
     {
         if(enter && PlayerController.Player_Singltone.umbrellaIsOpen)
@@ -20,6 +16,7 @@ public class Wind : MonoBehaviour
         }else if(!enter&& PlayerController.Player_Singltone.umbrellaIsOpen) {
             PlayerController.Player_Singltone.gravity = (float)PlayerController.Player_Singltone.staticGravity;
             PlayerController.Player_Singltone.umbrellaOnWind = false;
+
         }
         if (!PlayerController.Player_Singltone.umbrellaIsOpen)
         {

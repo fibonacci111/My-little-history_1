@@ -31,9 +31,12 @@ public class PlayerController : MonoBehaviour
 
     private bool switchd;
     private bool a = false;
+    private bool onWind;
+
     public float gravity = -9.81f;
     [NonSerialized] public float? staticGravity = null;
     public float umbrellaGravity = -0.5f;
+    public float windGravity = 10;
 
     [NonSerialized] public bool umbrellaIsOpen;
     [NonSerialized] public bool umbrellaOnWind;
@@ -49,12 +52,16 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        
-
+        Singl();
     }
+    public void Singl()
+    {
+        Player_Singltone = this;
+    }
+
     private void Start()
     {
-        if (staticGravity == null && oldJumpHeight == null && oldSpeed == null)
+        if (staticGravity == null)
         {
             staticGravity = gravity;
             oldJumpHeight = JumpHeight;
@@ -62,12 +69,13 @@ public class PlayerController : MonoBehaviour
 
         }
         Time.timeScale = 1;
-Player_Singltone = this;
+
     }
 
 
     void Update()
     {
+        Wind();
         staminaCanvas.fillAmount =1 - (timerStamina /stamina) ;
         
         if (Input.GetKey(KeyCode.LeftShift) && timerStamina <= stamina && isRun && ground._IsGround())
@@ -149,15 +157,15 @@ Player_Singltone = this;
 
         if (!LadderEnter)
         {
-            cc.Move(moveDirection * Speed * Time.fixedDeltaTime);
+            cc.Move(moveDirection * Speed * Time.deltaTime);
             
         }else if (LadderEnter)
         {
-            cc.Move(horMove *  Speed * Time.fixedDeltaTime);
-            cc.Move(ladder * LadderSpeed * Time.fixedDeltaTime); 
+            cc.Move(horMove *  Speed * Time.deltaTime);
+            cc.Move(ladder * LadderSpeed * Time.deltaTime); 
         }
     }
-   public  void Gravity()
+   public void Gravity()
     {
         bool aa = false;
         if (velosity.y <= DeathHeight)
@@ -216,8 +224,52 @@ Player_Singltone = this;
             
         }
     }
-    
+    public void Wind()
+    {
+
+        if (onWind && umbrellaIsOpen)
+        {
+            gravity = windGravity;
+            umbrellaOnWind = true;
+        }
+        else if (!onWind && umbrellaIsOpen)
+        {
+            gravity = (float)staticGravity;
+            umbrellaOnWind = false;
+
+        }
+        if (!umbrellaIsOpen)
+        {
+            gravity = (float)staticGravity;
+            umbrellaOnWind = false;
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Wind"))
+        {
+            onWind = true;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Wind"))
+        {
+            onWind = false;
+        }
+    }
+    public void ResetPlayerState()
+    {
+       gravity  = (float)staticGravity;
+        JumpHeight = (float)oldJumpHeight;
+       
+        umbrellaIsOpen = false;
+        umbrellaOnWind = false;
+       
+    }
+
 }
+
 
 
 
