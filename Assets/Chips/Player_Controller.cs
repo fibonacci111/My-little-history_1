@@ -142,19 +142,17 @@ public class PlayerController : MonoBehaviour
         float vertical = Input.GetAxisRaw("Vertical");
         float horizontal = Input.GetAxisRaw("Horizontal");
 
-        moveDirection = (vertical * transform.forward + horizontal * transform.right).normalized;
-        Vector3 rotatetion = new Vector3(horizontal, 0, vertical);
-        Vector3 horMove = new Vector3(horizontal, 0, 0);
-        rotatetion.Normalize();
-        Vector3 ladder = new Vector3(0, vertical, 0);
-        if (rotatetion != Vector3.zero)
+        Vector3 moveDirection = (vertical * transform.forward + horizontal * transform.right).normalized;
+        Vector3 inputDir = new Vector3(horizontal, 0, vertical).normalized;
+
+        if (inputDir != Vector3.zero)
         {
-            ////Quaternion rotation = Quaternion.LookRotation(moveDirection);
-
-            ////transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * Speed);
-            PlayerBody.transform.forward = rotatetion * RotateSpeed * Time.deltaTime;
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
+            float rotationSpeed = RotateSpeed * Time.deltaTime;
+            PlayerBody.transform.rotation = Quaternion.Lerp(PlayerBody.transform.rotation, targetRotation, rotationSpeed);
         }
-
+        Vector3 ladder = new Vector3(0, vertical, 0);
+ Vector3 horMove = new Vector3(horizontal, 0, 0);
         if (!LadderEnter)
         {
             cc.Move(moveDirection * Speed * Time.deltaTime);
