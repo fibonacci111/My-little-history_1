@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        Player_Singltone = this;
+        
 
     }
     private void Start()
@@ -62,21 +62,21 @@ public class PlayerController : MonoBehaviour
 
         }
         Time.timeScale = 1;
-
+Player_Singltone = this;
     }
 
 
     void Update()
     {
         staminaCanvas.fillAmount =1 - (timerStamina /stamina) ;
-
+        
         if (Input.GetKey(KeyCode.LeftShift) && timerStamina <= stamina && isRun && ground._IsGround())
         {
             Speed = Sprint;
             timerStamina += 1f * Time.deltaTime;
             isRun = true;
         }
-        else if (Input.GetKeyUp(KeyCode.LeftShift) || timerStamina >= stamina)
+        else if (Input.GetKeyUp(KeyCode.LeftShift) || timerStamina >= stamina || !ground._IsGround())
         {
             isRun = false;
         }
