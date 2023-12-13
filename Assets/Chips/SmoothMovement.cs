@@ -40,6 +40,7 @@ public class SmoothMovement : MonoBehaviour
             if (!isPlayer)
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                PlayerController.Player_Singltone.death = true;
             }
         }
     }

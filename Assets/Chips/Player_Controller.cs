@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
 //public interface GravityController
 //{
 //    public abstract void Gravity();
@@ -13,6 +14,8 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] GameObject Menu;
+    [SerializeField] Transform playerPosition;
     [SerializeField] CharacterController cc;
     [SerializeField] float Speed = 10f;
     private float? oldSpeed = null;
@@ -32,6 +35,7 @@ public class PlayerController : MonoBehaviour
     private bool switchd;
     private bool a = false;
     private bool onWind;
+    private bool isMenuOpen = true;
 
     public float gravity = -9.81f;
     [NonSerialized] public float? staticGravity = null;
@@ -49,7 +53,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GroundChecker ground;
     [SerializeField] Umbrella umbrella;
     public static PlayerController Player_Singltone;
-
+   
+    [NonSerialized] public bool death;
     private void Awake()
     {
         Singl();
@@ -69,7 +74,7 @@ public class PlayerController : MonoBehaviour
 
         }
         Time.timeScale = 1;
-
+        
     }
 
 
@@ -134,7 +139,38 @@ public class PlayerController : MonoBehaviour
                 umbrellaIsOpen=false;
             }
         }
+
+        if (death)
+        {
+            PlayerPrefs.SetInt("IsRestarted", 1); // Сохраняем флаг перезапуска
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        OpenMenu();
+    }
+    private void FixedUpdate()
+    {
+
+        if (PlayerPrefs.GetInt("IsRestarted", 0) == 1)
+        {
+            Checkpoint.TeleportToLastCheckpoint(transform);
+            PlayerPrefs.SetInt("IsRestarted", 0); // Сбрасываем флаг после использования
+        }
+
+    }
+   private void OpenMenu()
+    {
        
+        if (Input.GetKeyDown(KeyCode.Escape)&&isMenuOpen)
+        {
+            Menu.SetActive(true);
+            isMenuOpen = false;
+        }else if(Input.GetKeyDown(KeyCode.Escape) && isMenuOpen)
+        {
+            Menu.SetActive(false);
+            isMenuOpen = true;
+        }
+
     }
 
     private void Controller()
@@ -176,7 +212,10 @@ public class PlayerController : MonoBehaviour
         }
         if (aa && ground._IsGround())
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            death = true;
+            //Debug.Log("sadfasdfasd");
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            //Checkpoint.TeleportToLastCheckpoint(playerPosition.transform);
         }
         
         if (ground._IsGround() && velosity.y < 0 &&!umbrellaIsOpen)
